@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+
+import { createRestaurant } from './graphql/mutations';
+import { updateRestaurant } from './graphql/mutations';
+import { deleteRestaurant } from './graphql/mutations';
+import { listRestaurants, getRestaurant } from "./graphql/queries";
+
+
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
 import { API, Storage } from 'aws-amplify';
@@ -18,8 +25,54 @@ import {
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
 
-const App = ({ signOut }) => {
+const App = async ({ signOut }) => {
   const [notes, setNotes] = useState([]);
+
+
+    // List all items
+  const allRestaurants = await API.graphql({
+    query: listRestaurants
+  });
+  console.log(allRestaurants);
+
+  // Get a specific item
+  const oneRestaurant = await API.graphql({
+    query: getRestaurant,
+    variables: { id: 'YOUR_RECORD_ID' }
+  });
+
+  const newRestaurant = await API.graphql({
+    query: createRestaurant,
+    variables: {
+        input: {
+		"name": "Lorem ipsum dolor sit amet",
+		"description": "Lorem ipsum dolor sit amet",
+		"image": "Lorem ipsum dolor sit amet",
+		"city": "Lorem ipsum dolor sit amet"
+	}
+    }
+});
+
+const deletedRestaurant = await API.graphql({
+  query: deleteRestaurant,
+  variables: {
+      input: {
+          id: "YOUR_RECORD_ID"
+      }
+  }
+});
+
+const updatedRestaurant = await API.graphql({
+  query: updateRestaurant,
+  variables: {
+      input: {
+  "name": "Lorem ipsum dolor sit amet",
+  "description": "Lorem ipsum dolor sit amet",
+  "image": "Lorem ipsum dolor sit amet",
+  "city": "Lorem ipsum dolor sit amet"
+}
+  }
+});
 
   useEffect(() => {
     fetchNotes();

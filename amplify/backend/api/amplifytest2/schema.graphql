@@ -1,6 +1,8 @@
-type Note @model @auth(rules: [ { allow: public } ] ){
+type Restaurant @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
   description: String
   image: String
+  city: String
 }
+ 
